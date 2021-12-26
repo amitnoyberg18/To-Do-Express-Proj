@@ -1,3 +1,5 @@
+import { NextFunction, Request, Response } from "express";
+
 const express = require("express");
 const app = express();
 const taskRouter = require('./routes/tasksRoutes');
@@ -7,12 +9,16 @@ const cookieParser = require('cookie-parser')
 
 
 app.use(cookieParser())
-app.use(cors({
-    origin: 'http://localhost:3000'
-}))
-
-app.use((req,res,next)=>{
+const corsConfig = {
+    origin: true,
+    credentials: true,
+  };
+  
+  app.use(cors(corsConfig));
+  app.options('*', cors(corsConfig));
+app.use((req:Request,res:Response,next:NextFunction)=>{
     res.header("Access-Control-Origin", "*");
+    res.header("'Access-Control-Allow-Origin", "*");
     res.header('Access-Control-Allow-Credentials', 'true');
     res.header("Access-Control-Headers", "origin, X-Requested-Width, Content-Type, Accept, Authorization");
     if (req.method === "OPTIONS") {
